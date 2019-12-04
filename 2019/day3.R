@@ -24,7 +24,7 @@ plot_wire <- function(wire, start = c(0, 0), color = "black", first = FALSE) {
   pts <- wire_points(wire, start)
   pts_df <- t(data.frame(pts))
   if (first) {
-    plot(pts_df, type = "l", col = color)
+    plot(pts_df, type = "l", col = color, xlab = "x", ylab = "y")
     points(pts_df, col = color)
   } else {
     lines(pts_df, col = color)
@@ -39,5 +39,11 @@ plot_wire(wire2, color = "blue")
 
 wire1 <- "R75,D30,R83,U83,L12,D49,R71,U7,L72"
 wire2 <- "U62,R66,U55,R34,D71,R55,D58,R83"
+plot_wire(wire1, color = "red", first = TRUE)
+plot_wire(wire2, color = "blue")
+
+input <- readLines("2019/day3-input.txt")
+wire1 <- input[1]
+wire2 <- input[2]
 plot_wire(wire1, color = "red", first = TRUE)
 plot_wire(wire2, color = "blue")
