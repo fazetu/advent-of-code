@@ -32,8 +32,41 @@ plot_wire <- function(wire, start = c(0, 0), color = "black", first = FALSE) {
   }
 }
 
+slope <- function(x1, x2) {
+  (x2[2] - x1[2]) / (x2[1] - x1[1])
+}
+
+intercept <- function(x1, x2) {
+  m <- slope(x1, x2)
+  x1[2] - m * x1[1]
+}
+
+points_cross <- function(a1, a2, b1, b2) {
+  a1 <- c(0, 0)
+  a2 <- c(1, 1)
+  b1 <- c(0, 1)
+  b2 <- c(1, 0)
+  
+  
+  
+  am <- slope(a1, a2)
+  ab <- intercept(a1, a2)
+  bm <- slope(b1, b2)
+  bb <- intercept(b1, b2)
+  
+  af <- function(x) am * x + ab
+  bf <- function(x) bm * x + bb
+  
+  
+  
+  
+}
+
 wire1 <- "R8,U5,L5,D3"
 wire2 <- "U7,R6,D4,L4"
+wire1_pts <- wire_points(wire1)
+wire2_pts <- wire_points(wire2)
+
 plot_wire(wire1, color = "red", first = TRUE)
 plot_wire(wire2, color = "blue")
 
