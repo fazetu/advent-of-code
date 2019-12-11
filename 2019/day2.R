@@ -1,39 +1,90 @@
 # part 1
-# 99 = program finished and should stop
-# 1 = adds based on next 3 values
-# 2 = multiplies based on next 3 values
 
-code <- c(1,9,10,3,2,3,11,0,99,30,40,50)
-
-process_code <- function(code) {
-  n <- length(code)
-  i <- 1
-  
-  while(TRUE) {
-    op <- code[i]
-    if (op == 99) break
-    p1 <- code[i + 1] + 1
-    p2 <- code[i + 2] + 1
-    p3 <- code[i + 3] + 1
-    
-    if (op == 1) {
-      val <- code[p1] + code[p2]
-    } else if (op == 2) {
-      val <- code[p1] * code[p2]
-    }
-    
-    code[p3] <- val
-    i <- i + 4
-  }
-  
-  code
+# helpers
+# make zero indexing easier
+z <- function(x, i) {
+  x[i + 1]
 }
 
-process_code(code)
-process_code(c(1,0,0,0,99))
-process_code(c(2,3,0,3,99))
-process_code(c(2,4,4,5,99,0))
-process_code(c(1,1,1,4,99,5,6,0,99))
+`z<-` <- function(x, i, value) {
+  x[i + 1] <- value
+  x
+}
+
+VALID_OP_CODES <- c(1, 2, 99)
+
+STOP_CODE <- 99
+
+# opcode 1
+process_op1 <- function(program, i) {
+  i1 <- z(program, i + 1) # position to read first num
+  i2 <- z(program, i + 2) # position to read second num
+  ires <- z(program, i + 3) # position to substitute their sum
+  z(program, ires) <- z(program, i1) + z(program, i2)
+  program
+}
+
+move1 <- function() 4
+
+# opcode 2
+process_op2 <- function(program, i) {
+  i1 <- z(program, i + 1) # position to read first num
+  i2 <- z(program, i + 2) # position to read second num
+  ires <- z(program, i + 3) # position to substitute their sum
+  z(program, ires) <- z(program, i1) * z(program, i2)
+  program
+}
+
+move2 <- function() 4
+
+# combine
+process_op <- function(program, i) {
+  curr_code <- z(program, i)
+  stopifnot(curr_code %in% VALID_OP_CODES)
+  if (curr_code == 1) {
+    process_op1(program, i)
+  } else if (curr_code == 2) {
+    process_op2(program, i)
+  }
+}
+
+move <- function(program, i) {
+  curr_code <- z(program, i)
+  stopifnot(curr_code %in% VALID_OP_CODES)
+  if (curr_code == 1) {
+    move1()
+  } else if (curr_code == 2) {
+    move2()
+  }
+}
+
+# all
+process_intcode <- function(program) {
+  i <- 0
+  while (TRUE) {
+    curr_code <- z(program, i)
+    if (curr_code == STOP_CODE) break
+    mv <- move(program, i)
+    program <- process_op(program, i)
+    i <- i + mv
+  }
+  
+  program
+}
+
+program <- c(1, 0, 0, 3, 99)
+process_intcode(program)
+
+program <- c(1,9,10,3,2,3,11,0,99,30,40,50)
+process_intcode(program)
+
+process_intcode(c(1,1,1,4,99,5,6,0,99))
+
+process_intcode(code)
+process_intcode(c(1,0,0,0,99))
+process_intcode(c(2,3,0,3,99))
+process_intcode(c(2,4,4,5,99,0))
+process_intcode(c(1,1,1,4,99,5,6,0,99))
 
 gap <- readLines("2019/day2-input.txt")
 gap <- as.numeric(strsplit(gap, ",")[[1]])
