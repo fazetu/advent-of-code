@@ -1,7 +1,3 @@
-# part1
-
-# helpers
-# make zero indexing easier
 z <- function(x, i) {
   x[i + 1]
 }
@@ -11,135 +7,99 @@ z <- function(x, i) {
   x
 }
 
-VALID_OP_CODES <- c(1, 2, 3, 4, 5, 6, 7, 8, 99)
-
-STOP_CODE <- 99
-
-# opcode 1
-process_op1 <- function(program, i, modes = c(0, 0)) {
-  # for parameter 1
-  mode1 <- modes[1]
-  
-  if (mode1 == 0) { # positional mode
-    j1 <- z(program, i + 1) # position to read first num
-    val1 <- z(program, j1)
-  } else if (mode1 == 1) { # immediate mode
-    val1 <- z(program, i + 1)
-  }
-  
-  # for parameter 2
-  mode2 <- modes[2]
-  
-  if (mode2 == 0) { # positional mode
-    j2 <- z(program, i + 2)
-    val2 <- z(program, j2)
-  } else if (mode2 == 1) { # immediate mode
-    val2 <- z(program, i + 2)
-  }
-  
-  ires <- z(program, i + 3) # position to substitute their sum
-  z(program, ires) <- val1 + val2
-  program
-}
-
-# opcode 2
-process_op2 <- function(program, i, modes = c(0, 0)) {
-  # for parameter 1
-  mode1 <- modes[1]
-  
-  if (mode1 == 0) { # positional mode
-    j1 <- z(program, i + 1) # position to read first num
-    val1 <- z(program, j1)
-  } else if (mode1 == 1) { # immediate mode
-    val1 <- z(program, i + 1)
-  }
-  
-  # for parameter 2
-  mode2 <- modes[2]
-  
-  if (mode2 == 0) { # positional mode
-    j2 <- z(program, i + 2)
-    val2 <- z(program, j2)
-  } else if (mode2 == 1) { # immediate mode
-    val2 <- z(program, i + 2)
-  }
-  
-  ires <- z(program, i + 3) # position to substitute their sum
-  z(program, ires) <- val1 * val2
-  program
-}
-
-# opcode 3
-process_op3 <- function(program, i, input, modes = 0) {
-  mode <- modes[1]
-  
-  if (mode == 0) {
-    j <- z(program, i + 1)
-    z(program, j) <- input
-  } else if (mode == 1) {
-    z(program, i + 1) <- input
-  }
-  
-  program
-}
-
-# opcode 4
-process_op4 <- function(program, i, modes = 0) {
-  mode <- modes[1]
-  
-  if (mode == 0) {
-    j <- z(program, i + 1)
-    z(program, j)
-  } else if (mode == 1) {
-    z(program, i + 1)
-  }
-}
-
-# opcode 5
-process_op5 <- function(program, i, modes = 0) {
-  mode <- modes[0]
-  
-  if (mode == 0) {
-    j1 <- z(program, i + 1)
-    val1 <- z(program, j1)
-  } else if (mode == 1) {
-    val <- z(program, i + 1)
-  }
-  
-  
-}
-
-# combine
-process_op <- function(program, op_code, i, modes, input) {
-  stopifnot(op_code %in% VALID_OP_CODES)
-  
-  if (op_code == 1) {
-    process_op1(program, i, modes)
-  } else if (op_code == 2) {
-    process_op2(program, i, modes)
-  } else if (op_code == 3) {
-    process_op3(program, i, input, modes)
-  } else if (op_code == 4) {
-    process_op4(program, i, modes)
-  }
-}
-
 move <- function(op_code) {
-  stopifnot(op_code %in% VALID_OP_CODES)
-  
-  if (op_code %in% c(1, 2)) {
-    4
-  } else if (op_code %in% c(3, 4)) {
-    2
-  }
+  if (op_code %in% c(1, 2, 7, 8)) 4
+  else if (op_code %in% c(3, 4)) 2
+  else if (op_code %in% c(5, 6)) 3
 }
 
-# all
-parse_4digit_opcode <- function(num) {
-  # pad with 0's
+op1 <- function(x, start, modes) {
+  mode1 <- modes[1]
+  mode2 <- modes[2]
+  j1 <- ifelse(mode1 == 0, z(x, start + 1), start + 1)
+  j2 <- ifelse(mode2 == 0, z(x, start + 2), start + 2)
+  val1 <- z(x, j1)
+  val2 <- z(x, j2)
+  jres <- z(x, start + 3)
+  z(x, jres) <- val1 + val2
+  x
+}
+
+op2 <- function(x, start, modes) {
+  mode1 <- modes[1]
+  mode2 <- modes[2]
+  j1 <- ifelse(mode1 == 0, z(x, start + 1), start + 1)
+  j2 <- ifelse(mode2 == 0, z(x, start + 2), start + 2)
+  val1 <- z(x, j1)
+  val2 <- z(x, j2)
+  jres <- z(x, start + 3)
+  z(x, jres) <- val1 * val2
+  x
+}
+
+op3 <- function(x, start, input, modes) {
+  mode <- modes[1]
+  j <- ifelse(mode == 0, z(x, start + 1), start + 1)
+  z(x, j) <- input
+  x
+}
+
+op4 <- function(x, start, modes) {
+  mode <- modes[1]
+  j <- ifelse(mode == 0, z(x, start + 1), start + 1)
+  z(x, j)
+}
+
+op5 <- function(x, start, modes) {
+  mode1 <- modes[1]
+  mode2 <- modes[2]
+  j1 <- ifelse(mode1 == 0, z(x, start + 1), start + 1)
+  j2 <- ifelse(mode2 == 0, z(x, start + 2), start + 2)
+  val1 <- z(x, j1)
+  val2 <- z(x, j2)
+  ifelse(val1 != 0, val2, start + move(5))
+}
+
+op6 <- function(x, start, modes) {
+  mode1 <- modes[1]
+  mode2 <- modes[2]
+  j1 <- ifelse(mode1 == 0, z(x, start + 1), start + 1)
+  j2 <- ifelse(mode2 == 0, z(x, start + 2), start + 2)
+  val1 <- z(x, j1)
+  val2 <- z(x, j2)
+  ifelse(val1 == 0, val2, start + move(6))
+}
+
+op7 <- function(x, start, modes) {
+  mode1 <- modes[1]
+  mode2 <- modes[2]
+  j1 <- ifelse(mode1 == 0, z(x, start + 1), start + 1)
+  j2 <- ifelse(mode2 == 0, z(x, start + 2), start + 2)
+  val1 <- z(x, j1)
+  val2 <- z(x, j2)
+  resj <- z(x, start + 3)
+  resval <- ifelse(val1 < val2, 1, 0)
+  z(x, resj) <- resval
+  x
+}
+
+op8 <- function(x, start, modes) {
+  mode1 <- modes[1]
+  mode2 <- modes[2]
+  j1 <- ifelse(mode1 == 0, z(x, start + 1), start + 1)
+  j2 <- ifelse(mode2 == 0, z(x, start + 2), start + 2)
+  val1 <- z(x, j1)
+  val2 <- z(x, j2)
+  resj <- z(x, start + 3)
+  resval <- ifelse(val1 == val2, 1, 0)
+  z(x, resj) <- resval
+  x
+}
+
+decode_opcode <- function(num) {
   num_str <- as.character(num)
   zeros <- paste0(rep("0", 5 - nchar(num_str)), collapse = "")
-  num_str <- paste0(zeros, num_str, collapse = "")
+  num_str <- paste0(zeros, num_str, collapse = "") # pad with 0's
   
   s <- strsplit(num_str, "")[[1]]
   srev <- rev(s)
@@ -150,44 +110,57 @@ parse_4digit_opcode <- function(num) {
   mode2 <- as.numeric(srev[4])
   mode3 <- as.numeric(srev[5])
   
-  list(
-    op_code = op_code,
-    mode1 = mode1,
-    mode2 = mode2,
-    mode3 = mode3
-  )
+  list(op_code = op_code, modes = c(mode1, mode2, mode3))
 }
 
 process_intcode <- function(program, input) {
+  if (program[1] == 3 & missing(input)) stop("Need input")
   res <- c()
   i <- 0
   while (TRUE) {
-    op_code <- z(program, i)
-    inst <- parse_4digit_opcode(op_code)
+    first <- z(program, i)
+    l <- decode_opcode(first)
+    op_code <- l$op_code
+    modes <- l$modes
+    print(i)
     
-    curr_code <- inst[[1]]
-    modes <- unlist(inst[-1])
-    
-    if (curr_code == STOP_CODE) { # 99
+    if (op_code == 99) {
       break
+    } else if (op_code == 1) {
+      program <- op1(program, i, modes)
+      i <- i + move(op_code)
+    } else if (op_code == 2) {
+      program <- op2(program, i, modes)
+      i <- i + move(op_code)
+    } else if (op_code == 3) {
+      program <- op3(program, i, input, modes)
+      i <- i + move(op_code)
+    } else if (op_code == 4) {
+      out <- op4(program, i, modes)
+      res <- c(res, out)
+      i <- i + move(op_code)
+    } else if (op_code == 5) {
+      i <- op5(program, i, modes)
+    } else if (op_code == 6) {
+      i <- op6(program, i, modes)
+    } else if (op_code == 7) {
+      program <- op7(program, i, modes)
+      i <- i + move(op_code)
+    } else if (op_code == 8) {
+      program <- op8(program, i, modes)
+      i <- i + move(op_code)
     }
-    
-    if (curr_code == 4) { # output code
-      res <- c(res, process_op(program, 4, i, modes, input))
-    } else {
-      program <- process_op(program, curr_code, i, modes, input)
-    }
-    
-    i <- i + move(curr_code)
   }
   
-  res
+  list(program = program, res = res)
 }
 
+# part 1
 input <- readLines("2019/day5-input.txt")
 input <- as.numeric(strsplit(input, ",")[[1]])
-
 res <- process_intcode(input, 1)
-tail(res, 1) # answer
+tail(res$res, 1) # answer
 
 # part 2
+res <- process_intcode(input, 5)
+res$res # answer
