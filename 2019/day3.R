@@ -1,6 +1,3 @@
-wire1 <- c("R8","U5","L5","D3")
-wire2 <- c("U7","R6","D4","L4")
-
 get_dir <- function(code) substr(code, 1, 1)
 
 get_dist <- function(code) as.numeric(substr(code, 2, nchar(code)))
@@ -62,6 +59,8 @@ draw_wire <- function(grid, wire, start, fill_val) {
       start <- end
     } else if (dir == "L") {
       # move along columns
+      end <- c(start[1], start[2] - dist)
+      
       browser()
     } else if (dir == "U") {
       # move along rows
@@ -72,7 +71,7 @@ draw_wire <- function(grid, wire, start, fill_val) {
     }
   }
   
-  grid
+  list(grid = grid, start = start)
 }
 
 make_grid <- function(wire1, wire2) {
@@ -86,6 +85,16 @@ make_grid <- function(wire1, wire2) {
   res <- draw_wire(grid, wire2, start, "2")
   res$grid
 }
+
+wire1 <- c("R8","U5","L5","D3")
+wire2 <- c("U7","R6","D4","L4")
+make_grid(wire1, wire2)
+
+
+
+
+###########################
+
 
 #######################
 
