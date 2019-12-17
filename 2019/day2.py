@@ -10,53 +10,44 @@ class IntComputer:
         print(self.program)
 
     def reset(self):
-        self.pointer = self.orig_pointer
+        self.pointer = self.orig_pointer.copy()
         self.program = self.orig_program
 
-    def current_code(self):
-        return self.program[self.pointer]
+    def get(self, i):
+        return self.program[i]
+
+    def get_current(self):
+        return self.get(self.pointer)
 
     def op1(self):
-        if self.current_code() != 1:
+        if self.get_current() != 1:
             return None
-
-        i = self.pointer
-        prog = self.program.copy()
-        j1 = prog[i + 1]
-        j2 = prog[i + 2]
-        j3 = prog[i + 3]
-        prog[j3] = prog[j1] + prog[j2]
-        self.program = prog
+        j1 = self.get(self.pointer + 1)
+        j2 = self.get(self.pointer + 2)
+        j3 = self.get(self.pointer + 3)
+        self.program[j3] = self.get(j1) + self.get(j2)
+        self.pointer += 4
 
     def op2(self):
-        if self.current_code() != 2:
+        if self.get_current() != 2:
             return None
-
-        i = self.pointer
-        prog = self.program.copy()
-        j1 = prog[i + 1]
-        j2 = prog[i + 2]
-        j3 = prog[i + 3]
-        prog[j3] = prog[j1] * prog[j2]
-        self.program = prog
-
-    def move_pointer(self, op_code):
-        if op_code == 1 or op_code == 2:
-            self.pointer += 4
+        j1 = self.get(self.pointer + 1)
+        j2 = self.get(self.pointer + 2)
+        j3 = self.get(self.pointer + 3)
+        self.program[j3] = self.get(j1) * self.get(j2)
+        self.pointer += 4
         
     def op(self, op_code):
         if op_code == 1:
             self.op1()
-            self.move_pointer(op_code)
         elif op_code == 2:
             self.op2()
-            self.move_pointer(op_code)
 
     def run(self):
-        op_code = self.current_code()
+        op_code = self.get_current()
         while op_code != 99:
             self.op(op_code)
-            op_code = self.current_code()
+            op_code = self.get_current()
 
     def run_noun_verb(self, noun, verb):
         self.program[1] = noun
@@ -75,10 +66,13 @@ class IntComputer:
                 else:
                     self.reset()
              
-
-# cp = IntComputer([1,9,10,3,2,3,11,0,99,30,40,50])
-# cp.run()
-# cp.show()
+# tests
+"""
+program = [1,9,10,3,2,3,11,0,99,30,40,50]
+cp = IntComputer(program)
+cp.run()
+cp.show()
+"""
 
 # read input
 f = open("2019/day2-input.txt")
@@ -86,10 +80,12 @@ raw = f.readline()
 f.close()
 program = [int(x) for x in raw.replace("\n", "").split(",")]
 
+"""
 # part 1
 cp = IntComputer(program)
 cp.run_noun_verb(12, 2)
 cp.program[0] # answer
+"""
 
 # part 2
 cp = IntComputer(program)
