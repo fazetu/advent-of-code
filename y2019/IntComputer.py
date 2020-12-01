@@ -38,35 +38,35 @@ class IntComputer:
     def get_current(self):
         return self.get(self.pointer)
 
-    def op1(self):
+    def op1(self, modes):
         if self.get_current() != 1:
             return None
-        j1 = self.get(self.pointer + 1)
-        j2 = self.get(self.pointer + 2)
-        j3 = self.get(self.pointer + 3)
+        j1 = self.get(self.pointer + 1) if modes[0] == 0 else self.pointer + 1
+        j2 = self.get(self.pointer + 2) if modes[0] == 0 else self.pointer + 2
+        j3 = self.get(self.pointer + 3) if modes[0] == 0 else self.pointer + 3
         self.program[j3] = self.get(j1) + self.get(j2)
         self.pointer += 4
 
-    def op2(self):
+    def op2(self, modes):
         if self.get_current() != 2:
             return None
-        j1 = self.get(self.pointer + 1)
-        j2 = self.get(self.pointer + 2)
-        j3 = self.get(self.pointer + 3)
+        j1 = self.get(self.pointer + 1) if modes[0] == 0 else self.pointer + 1
+        j2 = self.get(self.pointer + 2) if modes[0] == 0 else self.pointer + 2
+        j3 = self.get(self.pointer + 3) if modes[0] == 0 else self.pointer + 3
         self.program[j3] = self.get(j1) * self.get(j2)
         self.pointer += 4
 
-    def op3(self, input):
+    def op3(self, input, modes):
         if self.get_current() != 3:
             return None
-        j = self.get(self.pointer + 1)
+        j = self.get(self.pointer + 1) if modes[0] == 0 else self.pointer + 1
         self.program[j] = input
         self.pointer += 2
 
-    def op4(self):
+    def op4(self, modes):
         if self.get_current() != 4:
             return None
-        j = self.get(self.pointer + 1)
+        j = self.get(self.pointer + 1) if modes[0] == 0 else self.pointer + 1
         self.pointer += 2
         return self.program[j]
         
