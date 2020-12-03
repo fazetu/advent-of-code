@@ -1,16 +1,14 @@
 # part 1
-report <- readLines("y2020/day1-input.txt")
-report <- as.numeric(report)
+input <- readLines("y2020/day1-input.txt")
+input <- as.numeric(input)
 
-combos <- expand.grid(report, report)
-combos$sum <- rowSums(combos)
-
-combos[combos$sum == 2020, ]
-prod(combos[combos$sum == 2020, ][1, 1:2]) # answer 1
+combos <- t(combn(input, 2))
+row_tot <- rowSums(combos)
+i <- which(row_tot == 2020)[1]
+prod(combos[i, ]) # answer 1
 
 # part 2
-combos <- expand.grid(report, report, report)
-combos$sum <- rowSums(combos)
-
-combos[combos$sum == 2020, ]
-prod(combos[combos$sum == 2020, ][1, 1:3]) # answer 2
+combos <- t(combn(input, 3))
+row_tot <- rowSums(combos)
+i <- which(row_tot == 2020)[1]
+prod(combos[i, ])
