@@ -2,20 +2,18 @@ input <- readLines("y2020/day3-input.txt")
 
 # part 1
 count_trees <- function(hill, right, down) {
-  # explode hill input into matrix
-  # keep original sized hill matrix around in hill_o for cbinding
-  hill_o <- do.call(rbind, strsplit(hill, ""))
-  hill_m <- hill_o
+  # separate hill input character vector into matrix
+  hill_m <- do.call(rbind, strsplit(hill, ""))
+  nr <- nrow(hill_m)
+  nc <- ncol(hill_m)
   
-  # starting positions
-  r <- 1
-  c <- 1
-  
+  r <- 1L # row position tracker
+  c <- 1L # column position tracker
   count <- 0L
   
-  while (r <= nrow(hill_m)) {
-    # if we go too far right, add more to the hill
-    if (c > ncol(hill_m)) hill_m <- cbind(hill_m, hill_o)
+  while (r <= nr) {
+    # reset which column we are at to "recycle" the matrix
+    if (c > nc) c <- c - nc
     
     # if we hit a tree increment count
     if (hill_m[r, c] == "#") count <- count + 1L
@@ -28,19 +26,61 @@ count_trees <- function(hill, right, down) {
   count
 }
 
-
-count_trees(input, right = 3, down = 1) # answer 1
+count_trees(input, right = 3L, down = 1L) # answer 1
 
 # part 2
-possible_slopes <- list(list(right = 1, down = 1),
-                        list(right = 3, down = 1),
-                        list(right = 5, down = 1),
-                        list(right = 7, down = 1),
-                        list(right = 1, down = 2))
+slopes <- list(list(right = 1L, down = 1L),
+               list(right = 3L, down = 1L),
+               list(right = 5L, down = 1L),
+               list(right = 7L, down = 1L),
+               list(right = 1L, down = 2L))
 
-counts <- vapply(possible_slopes, function(l) {
-  do.call(count_trees, modifyList(l, list(hill = input)))
+counts <- vapply(slopes, function(slope) {
+  do.call(count_trees, modifyList(slope, list(hill = input)))
 }, integer(1))
 
 prod(counts) # answer 2
 
+# time it
+count_trees2 <- function(hill_m, right, down) {
+  nr <- nrow(hill_m)
+  nc <- ncol(hill_m)
+  
+  r <- 1L # row position tracker
+  c <- 1L # column position tracker
+  count <- 0L
+  
+  while (r <= nr) {
+    # reset which column we are at to "recycle" the matrix
+    if (c > nc) c <- c - nc
+    
+    # if we hit a tree increment count
+    if (hill_m[r, c] == "#") count <- count + 1L
+    
+    # update position
+    r <- r + down
+    c <- c + right
+  }
+  
+  count
+}
+
+microbenchmark::microbenchmark(
+  part2 = {
+    counts <- vapply(slopes, function(slope) {
+      do.call(count_trees, modifyList(slope, list(hill = input)))
+    }, integer(1))
+    
+    prod(counts)
+  },
+  part2a = {
+    hill_m <- do.call(rbind, strsplit(input, ""))
+    
+    counts <- vapply(slopes, function(slope) {
+      do.call(count_trees2, modifyList(slope, list(hill_m = hill_m)))
+    }, integer(1))
+    
+    prod(counts)
+  },
+  times = 1000
+)
