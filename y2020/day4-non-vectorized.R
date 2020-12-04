@@ -2,7 +2,7 @@
 
 # part 1
 is_valid_passport1 <- function(chunk) {
-  has_fields <- vapply(required_fields, function(field) {
+  has_fields <- vapply(REQUIRED_FIELDS, function(field) {
     any(grepl(sprintf("%s:", field), chunk))
   }, logical(1))
   
