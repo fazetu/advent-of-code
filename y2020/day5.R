@@ -10,7 +10,7 @@ halve <- function(x) {
   list(x[1:half_mark], x[(half_mark + 1):length(x)])
 }
 
-find_half <- function(pass) {
+find_row <- function(pass) {
   pass <- strsplit(pass, "")[[1]]
   
   rows <- PLANE_ROWS
