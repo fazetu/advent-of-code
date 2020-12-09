@@ -16,9 +16,6 @@ input <- readLines("y2020/day7-input.txt")
 
 num_contain <- prep_input(input)
 
-colors_inside_color("shiny gold", num_contain)
-colors_color_can_be_inside("shiny gold", num_contain)
-
 # part 1
 length(unique(all_colors_color_can_be_inside("shiny gold", num_contain))) # answer 1
 
@@ -35,16 +32,17 @@ length(unique(all_colors_color_can_be_inside("shiny gold", num_contain))) # answ
 #   "dotted black bags contain no other bags."
 # )
 
-input <- c(
-  "shiny gold bags contain 2 dark red bags.",
-  "dark red bags contain 2 dark orange bags.",
-  "dark orange bags contain 2 dark yellow bags.",
-  "dark yellow bags contain 2 dark green bags.",
-  "dark green bags contain 2 dark blue bags.",
-  "dark blue bags contain 2 dark violet bags.",
-  "dark violet bags contain no other bags."
-)
+# input <- c(
+#   "shiny gold bags contain 2 dark red bags.",
+#   "dark red bags contain 2 dark orange bags.",
+#   "dark orange bags contain 2 dark yellow bags.",
+#   "dark yellow bags contain 2 dark green bags.",
+#   "dark green bags contain 2 dark blue bags.",
+#   "dark blue bags contain 2 dark violet bags.",
+#   "dark violet bags contain no other bags."
+# )
 
 num_contain <- prep_input(input)
 
-rec_count_bags("shiny gold", 1L, num_contain) - 1L
+# minus 1 to not count shiny gold itself
+rec_count_bags("shiny gold", 1L, num_contain) - 1L # answer 2
