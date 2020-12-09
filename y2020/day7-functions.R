@@ -17,9 +17,12 @@ prep_input <- function(input) {
   contains
 }
 
+# get the vector of colored bags that is inside the given colored bag
+inside_color <- function(color, contains) contains[[color]]
+
 # get the names of the colors that a given colored bag can contain
 # returns NULL if no colors inside the given colored bag
-colors_inside_color <- function(color, contains) names(contains[[color]])
+colors_inside_color <- function(color, contains) names(inside_color(color, contains))
 
 # get the color of bags that can contain a given color
 # returns NULL if the given colored bag is not contained in other colored bags
@@ -46,19 +49,17 @@ all_colors_color_can_be_inside <- function(color, contains) {
 }
 
 # count number of bags that are inside a given colored bag
-count_bags_inside_color <- function(color, n, contains) {
-  browser()
+rec_count_bags <- function(color, count, contains) {
+  inside <- inside_color(color = color, contains = contains)
   
-  res <- 0
-  
-  if (is.null(color)) {
-    return(sum(res))
+  if (is.null(inside)) {
+    return(count)
   } else {
-    inside <- contains[[color]]
-    res <- c(res, )
+    counts <- count * inside
+    res <- vapply(names(inside), function(col) {
+      rec_count_bags(color = col, count = unname(counts[col]), contains = contains)
+    }, integer(1))
     
-    mapply(function(color, n) {
-      count_bags_inside_color(color, n, contains = contains)
-    }, names(inside), inside)
+    return(sum(count, res))
   }
 }
