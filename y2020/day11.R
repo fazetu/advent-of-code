@@ -15,3 +15,9 @@ sum(m_final == "#") # answer 1
 m <- input_to_matrix(input)
 m_final <- run_iters2(m, occupied_tolerance = 5L)
 sum(m_final == "#") # answer 2
+
+# steve input
+input <- readLines("../../Downloads/aoc_dec11-1.txt")
+m <- input_to_matrix(input)
+m_final <- run_iters2(m, occupied_tolerance = 5L)
+sum(m_final == "#") # answer 2
