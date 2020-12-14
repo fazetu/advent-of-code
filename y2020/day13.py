@@ -13,7 +13,7 @@ buses_int = [x for x in buses if x != "x"]
 buses_s = list(reversed(sorted(buses_int)))
 
 increase = buses_s[0] # max bus number
-t = mods[increase]
+t = mods[buses_s[0]] # largest bus's offset
 
 for bus in buses_s[1:]:
     while t % bus != mods[bus]:
