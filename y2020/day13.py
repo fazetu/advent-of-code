@@ -5,15 +5,19 @@ with open("day13-input.txt") as f:
 buses = input[1].strip().split(",")
 buses = ["x" if x == "x" else int(x) for x in buses]
 
-mods = {bus: -i % bus for i, bus in enumerate(buses) if bus != "x"}
+buses = [7,13,"x","x",59,"x",31,19]
 
-vals = list(reversed(sorted(mods)))
-val = mods[vals[0]]
-r = vals[0]
+mods = {bus: (bus - i) % bus for i, bus in enumerate(buses) if bus != "x"}
 
-for b in vals[1:]:
-    while val % b != mods[b]:
-        val += r
-    r *= b
+buses_int = [x for x in buses if x != "x"]
+buses_s = list(reversed(sorted(buses_int)))
 
-val # answer 2
+increase = buses_s[0] # max bus number
+t = mods[increase]
+
+for bus in buses_s[1:]:
+    while t % bus != mods[bus]:
+        t += increase
+    increase *= bus
+
+t # answer 2
