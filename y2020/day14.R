@@ -41,6 +41,7 @@ for (chunk in command_chunks) {
 
 # cannot allocate memory
 # try writing out to a text file? and upating certain positions
+# move to python for file editing
 
 options(scipen = 100)
 sum(mem) # answer 2
