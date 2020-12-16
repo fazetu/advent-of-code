@@ -1,4 +1,4 @@
-input <- tolower(readLines("y2020/day4-input.txt"))
+input <- tolower(readLines("2020/day4-input.txt"))
 input <- paste0(input, " ") # put space at end of every line for paste0 later
 any(grepl("&", input)) # fine to use as unique char
 input[input == " "] <- "&"

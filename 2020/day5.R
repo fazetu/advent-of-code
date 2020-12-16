@@ -56,7 +56,7 @@ seat_ID <- function(pass) {
   (find_row(pass) * 8) + find_column(pass)
 }
 
-input <- readLines("y2020/day5-input.txt")
+input <- readLines("2020/day5-input.txt")
 
 # part 1
 ids <- vapply(input, seat_ID, numeric(1))

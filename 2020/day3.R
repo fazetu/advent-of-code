@@ -1,4 +1,4 @@
-input <- readLines("y2020/day3-input.txt")
+input <- readLines("2020/day3-input.txt")
 
 # part 1
 count_trees <- function(hill, right, down) {

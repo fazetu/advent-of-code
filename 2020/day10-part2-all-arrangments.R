@@ -1,4 +1,4 @@
-input <- as.integer(readLines("y2020/day10-input.txt"))
+input <- as.integer(readLines("2020/day10-input.txt"))
 
 input_to_joltages <- function(input) {
   input_s <- sort(input)

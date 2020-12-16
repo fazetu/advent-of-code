@@ -1,5 +1,5 @@
 library(tidyverse)
-source("y2020/day11-functions.R")
+source("2020/day11-functions.R")
 
 input <- c(
   "L.LL.LL.LL",
@@ -51,5 +51,5 @@ plot_iters2 <- function(m, occupied_tolerance = 5L, delay_sec = 1L) {
 
 plot_iters2(m, 5L)
 
-m <- input_to_matrix(readLines("y2020/day11-input.txt"))
+m <- input_to_matrix(readLines("2020/day11-input.txt"))
 m_final <- plot_iters2(m, 5L)

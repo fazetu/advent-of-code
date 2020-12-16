@@ -1,6 +1,6 @@
-source("y2020/day7-functions.R")
+source("2020/day7-functions.R")
 
-input <- readLines("y2020/day7-input.txt")
+input <- readLines("2020/day7-input.txt")
 
 # input <- c(
 #   "light red bags contain 1 bright white bag, 2 muted yellow bags.",

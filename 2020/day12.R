@@ -1,4 +1,4 @@
-input <- readLines("y2020/day12-input.txt")
+input <- readLines("2020/day12-input.txt")
 
 input <- c(
   "F10",
@@ -8,7 +8,7 @@ input <- c(
   "F11"
 )
 
-source("y2020/day12-ship-ref-class.R")
+source("2020/day12-ship-ref-class.R")
 
 # part 1
 ship <- Ship$new()

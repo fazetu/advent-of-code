@@ -1,5 +1,5 @@
 # type: ignore
-import y2019.IntComputer as IC
+import ..IntComputer as IC
 
 class TestIntComputer:
     def test_day2(self):

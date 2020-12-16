@@ -1,4 +1,4 @@
-source("y2020/day8-functions.R")
+source("2020/day8-functions.R")
 
 small_input <- c(
   "nop +0",
@@ -12,7 +12,7 @@ small_input <- c(
   "acc +6"
 )
 
-input <- readLines("y2020/day8-input.txt")
+input <- readLines("2020/day8-input.txt")
 
 # commands <- prep_input(small_input)
 commands <- prep_input(input)

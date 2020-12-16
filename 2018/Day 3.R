@@ -1,4 +1,4 @@
-d <- readLines("E:/Coding Practice/R Practice/Advent of Code/Day 3.txt")
+d <- readLines("2018/Day 3.txt")
 
 head(d)
 ids <- gsub("#(\\d+) @ .*: .*", "\\1", d)

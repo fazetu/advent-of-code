@@ -1,4 +1,4 @@
-input <- readLines("y2020/day13-input.txt")
+input <- readLines("2020/day13-input.txt")
 input <- c("939", "7,13,x,x,59,x,31,19")
 
 prep_input <- function(input) {

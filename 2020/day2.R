@@ -1,4 +1,4 @@
-input <- readLines("y2020/day2-input.txt")
+input <- readLines("2020/day2-input.txt")
 
 first <- gsub("^(\\d+)-(\\d+) ([a-z]): ([a-z]*)$", "\\1", input)
 last <- gsub("^(\\d+)-(\\d+) ([a-z]): ([a-z]*)$", "\\2", input)

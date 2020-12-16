@@ -1,4 +1,4 @@
-source("y2020/day14-functions.R")
+source("2020/day14-functions.R")
 
 input <- c(
   "mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X",
@@ -7,7 +7,7 @@ input <- c(
   "mem[8] = 0"
 )
 
-input <- readLines("y2020/day14-input.txt")
+input <- readLines("2020/day14-input.txt")
 
 # part 1
 n <- input_mem_n(input)
@@ -29,7 +29,7 @@ input <- c(
   "mem[26] = 1"
 )
 
-input <- readLines("y2020/day14-input.txt")
+input <- readLines("2020/day14-input.txt")
 
 command_chunks <- prep_input(input)
 

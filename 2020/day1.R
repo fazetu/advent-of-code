@@ -1,5 +1,5 @@
 # part 1
-input <- readLines("y2020/day1-input.txt")
+input <- readLines("2020/day1-input.txt")
 input <- as.numeric(input)
 
 combos <- t(combn(input, 2))

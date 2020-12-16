@@ -1,4 +1,4 @@
-input <- readLines("y2020/day6-input.txt")
+input <- readLines("2020/day6-input.txt")
 any(grepl("&", input)) # fine to use &
 input[input == ""] <- "&"
 input <- paste0(input, collapse = "")
@@ -10,7 +10,7 @@ unique_answers <- lapply(answers, unique)
 sum(lengths(unique_answers)) # answer 1
 
 # part 2
-input <- readLines("y2020/day6-input.txt")
+input <- readLines("2020/day6-input.txt")
 breaks <- which(input == "")
 is <- mapply(`:`, c(1, breaks + 1), c(breaks, length(input)))
 groups <- lapply(is, function(i) input[i])

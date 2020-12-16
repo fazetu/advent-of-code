@@ -21,7 +21,7 @@ times <- c(
 library(tidyverse)
 library(lubridate)
 
-times <- readLines("Day 4.txt")
+times <- readLines("2018/Day 4.txt")
 
 rgx <- "^\\[(.*)\\] (.*)$"
 

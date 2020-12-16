@@ -32,7 +32,7 @@ possible_attributes <- function(ticket) {
 }
 
 # parse input
-input <- readLines("y2020/day16-input.txt")
+input <- readLines("2020/day16-input.txt")
 
 ranges <- input[1L:(min(grep("^$", input)) - 1L)]
 your_ticket <- input[(min(grep("^$", input)) + 2L):(max(grep("^$", input)) - 1L)]

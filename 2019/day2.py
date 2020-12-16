@@ -1,5 +1,5 @@
 # type: ignore
-import y2019.IntComputer as IC
+import IntComputer as IC
 
 # tests
 cp = IC.IntComputer([1,0,0,0,99])
@@ -19,7 +19,7 @@ cp.run()
 cp.program == [30,1,1,4,2,5,6,0,99]
 
 # read input
-f = open("y2019/day2-input.txt")
+f = open("2019/day2-input.txt")
 raw = f.readline()
 f.close()
 program = [int(x) for x in raw.replace("\n", "").split(",")]

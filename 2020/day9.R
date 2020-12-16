@@ -22,7 +22,7 @@ small_input <- c(
 )
 
 small_input <- as.numeric(small_input)
-input <- as.numeric(readLines("y2020/day9-input.txt"))
+input <- as.numeric(readLines("2020/day9-input.txt"))
 
 all_sums <- function(nums, m = 2L) colSums(combn(nums, m = m))
 

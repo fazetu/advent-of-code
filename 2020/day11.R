@@ -2,8 +2,8 @@
 # L = empty seat
 # # = occupied seat
 
-source("y2020/day11-functions.R")
-input <- readLines("y2020/day11-input.txt")
+source("2020/day11-functions.R")
+input <- readLines("2020/day11-input.txt")
 
 # part 1
 m <- input_to_matrix(input)

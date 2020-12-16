@@ -1,5 +1,5 @@
 # output joltage = input
-input <- as.integer(readLines("y2020/day10-input.txt"))
+input <- as.integer(readLines("2020/day10-input.txt"))
 
 # part 1
 prod(table(diff(c(0L, sort(input), max(input) + 3L)))) # answer 1
