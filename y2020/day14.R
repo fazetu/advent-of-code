@@ -31,36 +31,11 @@ input <- c(
 
 input <- readLines("y2020/day14-input.txt")
 
-# to restart with input
-system("rm y2020/day14-files -rf")
-
-DIR <- "y2020/day14-files"
-if (!dir.exists(DIR)) dir.create(DIR)
-FILE_SIZE <- 10000000L # store 10M records per file
-
-ith_file <- function(i) {
-  file.path(DIR, sprintf("file-%d.txt", floor(i / FILE_SIZE)))
-}
-
-write_value <- function(i, value) {
-  f <- ith_file(i)
-  
-  if (!file.exists(f)) {
-    data <- rep("", FILE_SIZE)
-    data[i %% FILE_SIZE] <- as.character(value)
-    cat(data, file = f, sep = "\n")
-  } else {
-    data <- readLines(con = f)
-    data[i %% FILE_SIZE] <- as.character(value)
-    writeLines(text = data, con = f, sep = "\n")
-  }
-}
-
 command_chunks <- prep_input(input)
-j <- 1L
+
+mem <- c()
 
 for (chunk in command_chunks) {
-  print(sprintf("command #%d", j))
   mask <- chunk$mask
   steps <- chunk$steps
   
@@ -69,23 +44,11 @@ for (chunk in command_chunks) {
     new_bit <- apply_mask2(bit = curr_bit, mask = mask)
     pos_bits <- all_bit_combos(bit = new_bit)
     new_val <- bit_to_num(bit = pos_bits)
-    
-    # expand mem if needed
-    for (i in new_val) {
-      write_value(i = i, value = step$value)
-    }
+    mem[as.character(new_val)] <- step$value
   }
-  
-  j <- j + 1L
 }
 
-files <- dir(DIR, full.names = TRUE)
-ans <- 0L
+options(scipen = 100)
+sum(mem)
 
-for (file in files) {
-  lines <- readLines(file)
-  lines[lines == ""] <- "0"
-  ans <- ans + sum(as.integer(lines))
-}
-
-ans # answer 2
+# too high: 3584380595408
