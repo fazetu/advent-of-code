@@ -25,7 +25,6 @@ class Game:
         else:
             self.said_history[self.last].append(self.turn)
 
-
     def find_number_on_turn(self, turn):
         for key, val in self.said_history.items():
             if turn in val:
