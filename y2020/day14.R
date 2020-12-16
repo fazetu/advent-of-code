@@ -50,5 +50,3 @@ for (chunk in command_chunks) {
 
 options(scipen = 100)
 sum(mem)
-
-# too high: 3584380595408
