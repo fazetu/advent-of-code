@@ -34,6 +34,7 @@ res <- run_n(input, n)
 res[n] # answer 1
 
 # part 2
-n <- 30000000L
-res <- run_n(input, n)
-res[n] # answer 2
+# not run - too slow - used python
+# n <- 30000000L
+# res <- run_n(input, n)
+# res[n] # answer 2
