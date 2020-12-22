@@ -34,10 +34,14 @@ find_neighbors_layer <- function(m, x, y) {
 
 # run 1 cycle
 cycle <- function(state) {
+  new_state <- state
+  
   for (layer in state) {
+    layer
+    
     for (r in seq_len(nrow(layer))) {
       for (c in seq_len(ncol(layer))) {
-        find_neighbors()
+        find_neighbors_layer(layer, c, r)
       }
     }
   }
