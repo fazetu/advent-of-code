@@ -3,16 +3,9 @@ exprs <- c(
   "1 + (2 * 3) + (4 * (5 + 6))"
 )
 
-
-parse_expression <- function(expression) {
-  if (!grepl("\\(", expression)) return(expression)
-  
-  pars <- strsplit(expression, "\\(")
-}
-
-modified_math_eval <- function(expression) {
-  expression <- parse_expression(expression)
-  chars <- strsplit(expression, " ")[[1]]
+# modified math order of operations
+modified_math_ooo <- function(expression) {
+  chars <- strsplit(gsub("\\s+", "", expression), "")[[1]]
   
   ans <- as.numeric(chars[1])
   
@@ -26,3 +19,17 @@ modified_math_eval <- function(expression) {
   
   ans
 }
+
+fill_parens <- function(expresson) {
+  expression <- gsub("\\s+", "", expression)
+  chars <- strsplit(expression, "\\(")[[1]]
+  
+  for (char in chars) {
+    
+  }
+  
+  
+  paren_groups <- strsplit(expression, "\\(")
+}
+
+modified_math_ooo(exprs[1])
