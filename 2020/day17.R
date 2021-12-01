@@ -53,7 +53,12 @@ input <- c(
   "###"
 )
 
-state <- list("0" = do.call(rbind, lapply(strsplit(input, ""), function(r) ifelse(r == "#", 1, 0))))
+layer_0 <- do.call(rbind, lapply(strsplit(input, ""), function(r) ifelse(r == "#", 1, 0)))
+
+n_cycles <- 6
+layers_i <- (-n_cycles):(n_cycles)
+state <- setNames(replicate(length(layers_i), matrix(0, nrow(layer_0), ncol(layer_0)), simplify = FALSE), as.character(layers_i))
+state$`0` <- layer_0
 
 for (i in 1:6) {
   state <- cycle(state = state)
