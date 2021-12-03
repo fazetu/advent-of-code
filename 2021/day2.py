@@ -1,4 +1,5 @@
 from typing import Tuple, List
+import warnings
 
 input = [
     "forward 5",
@@ -32,7 +33,7 @@ def run_commands1(input: List[str]) -> Tuple[int, int]:
         elif direction == "up":
             depth -= distance
         else:
-            print("Uh oh.")
+            warnings.warn(f"Unknown direction {direction}")
     
     return (horizontal, depth)
 
@@ -56,7 +57,7 @@ def run_commands2(input: List[str]) -> Tuple[int, int]:
         elif direction == "up":
             aim -= distance
         else:
-            print("Uh oh.")
+            warnings.warn(f"Unknown direction {direction}")
     
     return (horizontal, depth)
 
