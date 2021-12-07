@@ -23,8 +23,8 @@ input = [
     " 2  0 12  3  7",
 ]
 
-# with open("day4-input.txt", "r") as f:
-#     input = [line.strip() for line in f.readlines()]
+with open("day4-input.txt", "r") as f:
+    input = [line.strip() for line in f.readlines()]
 
 # part 1
 def parse_input(input: List[str]) -> Dict[str, List]:
