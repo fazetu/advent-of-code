@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import Tuple, List, Optional
 import numpy as np
+import seaborn as sns
+from matplotlib.axes import Axes
 
 Point = Tuple[int, int]
 
@@ -149,12 +151,21 @@ class OceanFloor:
 
         return m
 
+    def count_at_least_two_overlaps(self, with_diagonals: bool = True) -> int:
+        m = self.overlapping_matrix(with_diagonals)
+        return (m >= 2).sum()
+
+    def plot(self, with_diagonals: bool = True, cbar: bool = False) -> Axes:
+        m = self.overlapping_matrix(with_diagonals)
+        ax = sns.heatmap(m, xticklabels=False, yticklabels=False, cbar=cbar)
+        return ax
+
 of = OceanFloor([Vent.from_string(string) for string in input])
 
 # part 1
-m = of.overlapping_matrix(False)
-(m >= 2).sum() # answer part 1
+_ = of.plot(False)
+of.count_at_least_two_overlaps(False) # answer part 1
 
 # part 2
-m = of.overlapping_matrix(True)
-(m >= 2).sum() # answer part 2
+_ = of.plot(True)
+of.count_at_least_two_overlaps(True) # answer part 2
