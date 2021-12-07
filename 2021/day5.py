@@ -6,7 +6,7 @@ from matplotlib.axes import Axes
 
 Point = Tuple[int, int]
 
-input = [
+small_input = [
     "0,9 -> 5,9",
     "8,0 -> 0,8",
     "9,4 -> 3,4",
@@ -160,12 +160,19 @@ class OceanFloor:
         ax = sns.heatmap(m, xticklabels=False, yticklabels=False, cbar=cbar)
         return ax
 
+small_of = OceanFloor([Vent.from_string(string) for string in small_input])
 of = OceanFloor([Vent.from_string(string) for string in input])
 
 # part 1
+small_of.plot(False)
+small_of.count_at_least_two_overlaps(False)
+
 _ = of.plot(False)
 of.count_at_least_two_overlaps(False) # answer part 1
 
 # part 2
+small_of.plot(True)
+small_of.count_at_least_two_overlaps(True)
+
 _ = of.plot(True)
 of.count_at_least_two_overlaps(True) # answer part 2
