@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Tuple, List
+from typing import Tuple, List, Optional
 import numpy as np
 
 Point = Tuple[int, int]
@@ -17,40 +17,44 @@ input = [
     "5,5 -> 8,2",
 ]
 
+with open("day5-input.txt", "r") as f:
+    input = [line.strip() for line in f.readlines()]
+
+def axis_range(a: int, b: int) -> List[int]:
+    if a == b:
+        return [a]
+    elif a < b:
+        return list(range(a, b + 1, 1))
+    else:
+        return list(range(a, b - 1, -1))
+
 
 def horizontal_points(x1: int, x2: int, y: int) -> List[Point]:
-    if x1 == x2:
-        return [(x1, y)]
-    elif x1 < x2:
-        xr = list(range(x1, x2 + 1, 1))
-    else:
-        xr = list(range(x1, x2 - 1, -1))
-
+    xr = axis_range(x1, x2)
     return [(x, y) for x in xr]
 
 
 def vertical_points(x: int, y1: int, y2: int) -> List[Point]:
-    if y1 == y2:
-        return [(x, y1)]
-    elif y1 < y2:
-        yr = list(range(y1, y2 + 1))
-    else:
-        yr = list(range(y1, y2 - 1, -1))
-
+    yr = axis_range(y1, y2)
     return [(x, y) for y in yr]
 
 
 def diagonal_points(x1: int, y1: int, x2: int, y2: int) -> List[Point]:
-    pass
+    xr = axis_range(x1, x2)
+    yr = axis_range(y1, y2)
+    return [(x, y) for x, y in zip(xr, yr)]
 
 
-def line_points(x1: int, y1: int, x2: int, y2: int) -> List[Point]:
+def line_points(x1: int, y1: int, x2: int, y2: int, with_diagonals: bool = True) -> Optional[List[Point]]:
     if x1 == x2:
         return vertical_points(x1, y1, y2)
     elif y1 == y2:
         return horizontal_points(x1, x2, y1)
     else:
-        return diagonal_points(x1, x2, y1, y2)
+        if with_diagonals:
+            return diagonal_points(x1, y1, x2, y2)
+        else:
+            return None
 
 
 class Vent:
@@ -74,15 +78,15 @@ class Vent:
     def y2(self) -> int:
         return self.p2[1]
 
-    def vent_line(self) -> List[Point]:
-        return line_points(self.x1, self.y1, self.x2, self.y2)
+    def vent_line(self, with_diagonals: bool = True) -> Optional[List[Point]]:
+        return line_points(self.x1, self.y1, self.x2, self.y2, with_diagonals)
 
     @classmethod
     def from_string(cls, string: str) -> Vent:
         p1, p2 = string.split(" -> ")
-        p1 = [int(val) for val in p1.split(",")]
-        p2 = [int(val) for val in p2.split(",")]
-        return cls(p1, p2)
+        x1, y1 = p1.split(",")
+        x2, y2 = p2.split(",")
+        return cls((int(x1), int(y1)), (int(x2), int(y2)))
 
     def max_x(self) -> int:
         return max(self.x1, self.x2)
@@ -119,21 +123,38 @@ class OceanFloor:
         max_y = self.max_y()
         min_y = self.min_y()
 
-        return [
+        return (
             (min_x, min_y),
             (max_x, min_y),
             (min_x, max_y),
             (max_x, max_y),
-        ]
+        )
 
-    def overlapping_matrix(self) -> np.matrix:
+    def overlapping_matrix(self, with_diagonals: bool = True) -> np.matrix:
         nx = self.max_x() + 1
         ny = self.max_y() + 1
 
-        np.matrix()
-        np.m
-        pass
+        rows = [[0 for _ in range(ny)] for _ in range(nx)]
+        m = np.matrix(rows)
 
+        for vent in self.vents:
+            points = vent.vent_line(with_diagonals)
+
+            # points returned can be None if with_diagonals is False
+            if points is None:
+                continue
+
+            for point in points:
+                m[point[0], point[1]] += 1
+
+        return m
 
 of = OceanFloor([Vent.from_string(string) for string in input])
-of.boundaries()
+
+# part 1
+m = of.overlapping_matrix(False)
+(m >= 2).sum() # answer part 1
+
+# part 2
+m = of.overlapping_matrix(True)
+(m >= 2).sum() # answer part 2
