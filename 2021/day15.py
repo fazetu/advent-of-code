@@ -1,4 +1,5 @@
-from typing import List
+from typing import List, Optional
+import numpy as np
 from Grid import Grid, Point
 
 input = [
@@ -26,6 +27,45 @@ class RiskLevel:
     def find_next_possible_moves(self, position: Point, path: List[Point]) -> List[Point]:
         return [point for point in self.grid.adjacent_points(position, False) if point not in path]
 
+    def find_next_random_move(self, position: Point, path: List[Point]) -> Optional[Point]:
+        pos = self.find_next_possible_moves(position, path)
+
+        if len(pos) == 0:
+            return None
+
+        risks = [self.grid.get(point) for point in pos]
+
+        if len(risks) == 1:
+            probs = [1.0]
+        else:
+            total_risk = sum(risks)
+            reverse_risks = [total_risk - risk for risk in risks]
+            # pick point based on risk
+            # higher risk means we should stay away from that point
+            probs = [risk / sum(reverse_risks) for risk in reverse_risks]
+
+        i = np.random.choice(np.arange(len(pos)), size=1, p=probs)
+        j = i[0]
+        return pos[j]
+
+    def find_random_path(self) -> Optional[List[Point]]:
+        path = []
+        start = (0, 0)
+        r, c = self.grid.dim
+        end = (r - 1, c - 1)
+
+        position = start
+        path.append(position)
+
+        while position != end:
+            n = self.find_next_random_move(position, path)
+            if n is None:
+                return None
+            path.append(n)
+            position = n
+
+        return path
+
     def find_next_best_moves(self, position: Point, path: List[Point]) -> List[Point]:
         nexts = self.find_next_possible_moves(position, path)
         best_risk = min([self.grid.get(point) for point in nexts])
@@ -49,13 +89,26 @@ class RiskLevel:
         while self.position != (r - 1, c - 1):
             self.move()
 
+    def calculate_total_risk(self, path: List[Point]) -> int:
+        risks = [self.grid.get(point) for point in path]
+        return sum(risks)
+
     def total_risk(self) -> int:
         self.navigate_cave()
         risks = [self.grid.get(point) for point in self.path]
         return sum(risks)
 
-
+runs = []
 rl = RiskLevel(input)
 
-# part 1
-rl.total_risk() # answer part 1
+for _ in range(100000):
+    rand_path = rl.find_random_path()
+
+    if rand_path is not None:
+        risk = rl.calculate_total_risk(rand_path)
+    else:
+        risk = None
+
+    runs.append({"path": rand_path, "risk": risk})
+
+min([run["risk"] for run in runs if run["risk"] is not None])
