@@ -1,3 +1,6 @@
+from typing import Dict, List, Optional
+from dataclasses import dataclass
+
 # with open("day16-input.txt", "r") as f:
 #     input = f.readline().strip()
 
@@ -20,6 +23,13 @@ hex_to_binary = {
     "F": "1111",
 }
 
+@dataclass
+class PacketData:
+    version: int
+    type: int
+    name: str
+    value: Optional[int]
+
 def convert_hex_to_binary(hex: str) -> str:
     bin = ""
     for char in hex:
@@ -27,13 +37,16 @@ def convert_hex_to_binary(hex: str) -> str:
 
     return bin
 
-def version_of_binary(bin: str) -> int:
+def version(bin: str) -> int:
     return int(bin[:3], 2)
 
-def type_id_of_binary(bin: str) -> int:
-    return int(bin[3:6], 2)
+def type_id(bin: str) -> int:
+    return int(bin[3:(3 + 3)], 2)
 
-def literal_value_binary(bin: str) -> int:
+def length_type_id(bin: str) -> int:
+    return int(bin[6])
+
+def literal_value(bin: str) -> int:
     num_bin = ""
     last_chunk = False
     start = 6
@@ -45,15 +58,48 @@ def literal_value_binary(bin: str) -> int:
         start += 5
 
     return int(num_bin, 2)
-        
 
-hex = "D2FE28"
-bin = convert_hex_to_binary(hex)
-version_of_binary(bin)
-type_id_of_binary(bin)
-literal_value_binary(bin)
+def process_literal_packet(packet: str, i: int) -> PacketData:
+    t = type_id(packet[i:])
+
+    if t != 4:
+        raise ValueError("This packet is not a literal packet")
+
+    return PacketData(version(packet[i:]), t, "literal", literal_value(packet[i:]))
+
+def process_operator_packet(packet: str, res: List[PacketData]):
+    t = type_id(packet)
+
+    if t == 4:
+        raise ValueError("This packet is not an operator packet")
+
+    res.append(PacketData(version(packet), t, "operator", None))
+
+    lt = length_type_id(packet)
+
+    if lt == 0:
+        total_length = int(packet[7:22], 2)
+        next_packets = packet[22:(22 + total_length)]
+        process_packet(next_packets, res)
+    elif lt == 1:
+        next_packets = packet[22:]
+        process_packet(next_packets, res)
+
+def process_packet(packet: str, res: List[PacketData]):
+    if type_id(packet) == 4:
+        process_literal_packet(packet, res)
+    else:
+        process_operator_packet(packet, res)
+
+
+# hex = "D2FE28"
+# bin = convert_hex_to_binary(hex)
+# res = []
+# process_packet(bin, res)
+# res
 
 hex = "38006F45291200"
 bin = convert_hex_to_binary(hex)
-version_of_binary(bin)
-type_id_of_binary(bin)
+res = []
+process_packet(bin, res)
+res
