@@ -21,8 +21,8 @@ input = [
     "CN -> C",
 ]
 
-# with open("day14-input.txt", "r") as f:
-#     input = [line.strip() for line in f.readlines()]
+with open("day14-input.txt", "r") as f:
+    input = [line.strip() for line in f.readlines()]
 
 def find_pairs(template: str) -> List[str]:
     l = len(template) + 1
