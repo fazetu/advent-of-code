@@ -1,4 +1,3 @@
-from typing import Tuple
 from utils import read_input
 
 # for both parts
