@@ -6,7 +6,7 @@ def read_input(day: int) -> List[str]:
     """Helper to read the given day's input file
 
     Assumes the input file is in the input folder with the name dayN.txt. Reads
-    all the lines and strips white space from each.
+    all the lines and strips ending new line characters.
 
     Args:
         day (int): Day number to read in.
@@ -21,4 +21,4 @@ def read_input(day: int) -> List[str]:
     with open(input_file, "r") as f:
         lines = f.readlines()
 
-    return [line.strip() for line in lines]
+    return [line.replace("\n", "") for line in lines]
