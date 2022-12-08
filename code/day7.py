@@ -28,6 +28,13 @@ from utils import read_input
 
 input = read_input(7)
 
+# possible lines:
+# starts with 
+
+all_paths = set()
+
+
+
 def dir_name(d: str) -> str:
     return d.replace("dir", "").strip()
 
