@@ -30,6 +30,7 @@ from utils import read_input
 
 input = read_input(7)
 
+
 def dict_insert_add(d: dict[Any, int], k: Any, v: int):
     # modifies dictionary in place!
     if k in d:
@@ -37,12 +38,14 @@ def dict_insert_add(d: dict[Any, int], k: Any, v: int):
     else:
         d[k] = v
 
+
 def join_path(*args: str) -> str:
     return os.path.normpath(os.path.join(*args)).replace("\\", "/")
 
+
 def get_all_sizes(lines: list[str]) -> dict[str, tuple[str, int]]:
     in_ls = False
-    all_sizes: dict[str, tuple[str, int]] = {}
+    all_sizes: dict[str, tuple[str, int]] = {"/": ("dir", 0)}
     curr_location = []
 
     for line in lines:
@@ -63,55 +66,48 @@ def get_all_sizes(lines: list[str]) -> dict[str, tuple[str, int]]:
 
     return all_sizes
 
-def get_dir_sizes(all_sizes: dict[str, tuple[str, int]]) -> dict[str, int]:
-    dir_sizes: dict[str, int] = {}
 
-    for path, (type, size) in all_sizes.items():
-        if type == "file":
-            dict_insert_add(dir_sizes, os.path.dirname(path), size)
+def get_all_dirs(sizes: dict[str, tuple[str, int]]) -> list[str]:
+    dirs = []
+    for k, (type, _) in sizes.items():
+        if type == "dir":
+            dirs.append(k)
 
-    return dir_sizes
+    return dirs
 
-def is_top_dir(d: str) -> bool:
-    return d.count("/") == 1
 
-def all_top_dirs(dir_sizes: dict[str, int]) -> bool:
-    nms = list(dir_sizes.keys())
-    return all([is_top_dir(nm) for nm in nms])
+def get_dir_size(sizes: dict[str, tuple[str, int]], dir_name: str) -> int:
+    total_size = 0
 
-def combine_dir_sizes(dir_sizes: dict[str, int], include_orig: bool = True) -> dict[str, int]:
-    orig_dirs: dict[str, int] = {}
+    for path, (_, size) in sizes.items():
+        if path.startswith(dir_name):
+            total_size += size
 
-    while not all_top_dirs(dir_sizes):
-        new_dir_sizes: dict[str, int] = {}
+    return total_size
 
-        for path, size in dir_sizes.items():
-            if not is_top_dir(path):
-                dname = os.path.dirname(path)
-                dict_insert_add(new_dir_sizes, dname, size)
-                dict_insert_add(orig_dirs, path, size)
-            else:
-                dict_insert_add(new_dir_sizes, path, size)
 
-        dir_sizes = new_dir_sizes
+all_sizes = get_all_sizes(input)
+dir_sizes = {
+    dir_name: get_dir_size(all_sizes, dir_name) for dir_name in get_all_dirs(all_sizes)
+}
 
-    if include_orig:
-        return {**dir_sizes, **orig_dirs}
-    else:
-        return dir_sizes
 
 # part 1
-all_sizes = get_all_sizes(input)
-dir_sizes = get_dir_sizes(all_sizes)
-comb_sizes = combine_dir_sizes(dir_sizes)
-small_sizes = [size for size in comb_sizes.values() if size <= 100_000]
-
-print(all_sizes)
-print("")
-print(dir_sizes)
-print("")
-print(comb_sizes)
-print("")
+small_sizes = [size for size in dir_sizes.values() if size < 100_000]
 
 # answer 1
 print(sum(small_sizes))
+
+# answer 2
+total_space = 70_000_000
+needed_space = 30_000_000
+total_used = dir_sizes["/"]
+total_free = total_space - total_used
+to_free = needed_space - total_free
+delete_candidates = [
+    dir_name for dir_name, size in dir_sizes.items() if size >= to_free
+]
+to_delete = sorted(delete_candidates, key=lambda x: dir_sizes[x])[0]
+
+# answer 2
+print(dir_sizes[to_delete])
