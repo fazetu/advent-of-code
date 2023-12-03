@@ -9,3 +9,4 @@ build/
 dist/
 .vscode/
 scratch*.py
+.venv/

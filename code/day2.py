@@ -1,82 +1,82 @@
+from __future__ import annotations
+
+import re
+from dataclasses import dataclass
+
 from utils import read_input
 
-# for both parts
-opponent_key = {"A": "Rock", "B": "Paper", "C": "Scissors"}
-outcome_score = {"Lose": 0, "Draw": 3, "Win": 6}
-shape_score = {"Rock": 1, "Paper": 2, "Scissors": 3}
-
-# input = ["A Y", "B X", "C Z"]
-input = read_input(2)
-
-# part 1
-your_key = {"X": "Rock", "Y": "Paper", "Z": "Scissors"}
+lines = read_input(2)
 
 
-def outcome_of_round(opponent: str, you: str) -> str:
-    opponent_shape = opponent_key[opponent]
-    your_shape = your_key[you]
-
-    if opponent_shape == your_shape:
-        return "Draw"
-
-    if your_shape == "Rock" and opponent_shape == "Scissors":
-        return "Win"
-    elif your_shape == "Paper" and opponent_shape == "Rock":
-        return "Win"
-    elif your_shape == "Scissors" and opponent_shape == "Paper":
-        return "Win"
-
-    return "Lose"
+test_lines = [
+    "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green",
+    "Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue",
+    "Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red",
+    "Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red",
+    "Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green",
+]
 
 
-def round_score1(opponent: str, you: str) -> int:
-    your_shape = your_key[you]
-    outcome = outcome_of_round(opponent, you)
-    return outcome_score[outcome] + shape_score[your_shape]
+def get_game_id(line: str) -> int:
+    return int(re.sub("Game (\\d+): .*", "\\1", line))
 
 
-scores1 = [round_score1(*line.split(" ")) for line in input]
+def get_possible_game_ids(
+    lines: list[str], max_reds: int, max_greens: int, max_blues: int
+) -> list[int]:
+    all_games = []
+    impossible_games = []
 
-# answer 1
-print(sum(scores1))
+    for line in lines:
+        id = get_game_id(line)
+        all_games.append(id)
 
+        reds = map(int, re.findall("(\\d+) red", line))
 
-# part 2
-outcome_key = {"X": "Lose", "Y": "Draw", "Z": "Win"}
+        if any([red > max_reds for red in reds]):
+            impossible_games.append(id)
+            continue
 
+        greens = map(int, re.findall("(\\d+) green", line))
 
-def your_shape_for_outcome(opponent: str, outcome: str) -> str:
-    opponent_shape = opponent_key[opponent]
-    outcome_ = outcome_key[outcome]
+        if any([green > max_greens for green in greens]):
+            impossible_games.append(id)
+            continue
 
-    if outcome_ == "Draw":
-        return opponent_shape
+        blues = map(int, re.findall("(\\d+) blue", line))
 
-    if outcome_ == "Win":
-        if opponent_shape == "Rock":
-            return "Paper"
-        elif opponent_shape == "Paper":
-            return "Scissors"
-        else:
-            # need to win and opponent picked scissors
-            return "Rock"
-    else:
-        if opponent_shape == "Rock":
-            return "Scissors"
-        elif opponent_shape == "Paper":
-            return "Rock"
-        else:
-            # need to lose and opponent picked scissors
-            return "Paper"
+        if any([blue > max_blues for blue in blues]):
+            impossible_games.append(id)
+            continue
+
+    possible_games = [id for id in all_games if id not in impossible_games]
+    return possible_games
 
 
-def round_score2(opponent: str, outcome: str) -> int:
-    your_shape = your_shape_for_outcome(opponent, outcome)
-    outcome_ = outcome_key[outcome]
-    return outcome_score[outcome_] + shape_score[your_shape]
+def solve1(lines: list[str]) -> int:
+    possible_game_ids = get_possible_game_ids(lines, 12, 13, 14)
+    return sum(possible_game_ids)
 
 
-scores2 = [round_score2(*line.split(" ")) for line in input]
+assert solve1(test_lines) == 8
 
-# answer 2
-print(sum(scores2))
+print(solve1(lines))
+
+
+def get_power_of_game(line: str) -> int:
+    needed_reds = max(map(int, re.findall("(\\d+) red", line)))
+    needed_greens = max(map(int, re.findall("(\\d+) green", line)))
+    needed_blues = max(map(int, re.findall("(\\d+) blue", line)))
+
+    return needed_reds * needed_greens * needed_blues
+
+assert get_power_of_game(test_lines[0]) == 48
+assert get_power_of_game(test_lines[1]) == 12
+
+def solve2(lines: list[str]) -> int:
+    powers = [get_power_of_game(line) for line in lines]
+    return sum(powers)
+
+assert solve2(test_lines) == 2286
+
+print(solve2(lines))
