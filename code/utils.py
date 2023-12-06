@@ -29,8 +29,7 @@ def read_input(day: Optional[int] = None) -> list[str]:
     """
     if day is None:
         frame = inspect.stack()[1]
-        module = inspect.getmodule(frame[0])
-        calling_filename = module.__file__  # type: ignore
+        calling_filename = frame.filename
         s = re.sub("day(\\d+)\\.py", "\\1", os.path.basename(calling_filename))  # type: ignore
         day = int(s)
 
